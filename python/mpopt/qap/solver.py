@@ -168,8 +168,11 @@ class Solver(BaseSolver):
     def set_random_seed(self, seed):
         return self.lib.solver_set_random_seed(self.solver, seed)
 
-    def set_stopping_criterion(self, epsilon_lb = 0.0001, epsilon_ub = 0.01, k_batches = 4):
-        self.lib.solver_set_stopping_criterion(self.solver, epsilon_lb, epsilon_ub, k_batches)
+    # def set_stopping_criterion(self, epsilon_lb = 0.0001, epsilon_ub = 0.01, k_batches = 4):
+    #     self.lib.solver_set_stopping_criterion(self.solver, epsilon_lb, epsilon_ub, k_batches)
+
+    def set_stopping_criterion(self, p = 0.0001, k_batches = 5):
+        self.lib.solver_set_stopping_criterion(self.solver, p, k_batches)
 
     def run(self, batch_size=DEFAULT_BATCH_SIZE, max_batches=DEFAULT_MAX_BATCHES, greedy_generations=DEFAULT_GREEDY_GENERATIONS):
         return self.lib.solver_run(self.solver, batch_size, max_batches, greedy_generations) 

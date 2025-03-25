@@ -35,9 +35,10 @@ def parse_arguments():
     parser.add_argument('--ilp', action='store_true', help='Solves the ILP after reparametrizing.')
     parser.add_argument('--combilp', action='store_true', help='Solves the problem using combilp after reparametrizing.')
     parser.add_argument('input_filename', metavar='INPUT', help='Specifies the *.dd input file.')
-    parser.add_argument("--epsilon_ub", type =float, default = 0.01 , help="Difference in the primal bound required for stopping.")
-    parser.add_argument("--epsilon_lb", type =float, default = 0.0001, help="Difference in the dual bound required for stopping." )
-    parser.add_argument("--k_batches", type = int, default = 4, help = "Number of required iterations with no change in the primal value.")
+    #parser.add_argument("--epsilon_ub", type =float, default = 0.01 , help="Difference in the primal bound required for stopping.")
+    #parser.add_argument("--epsilon_lb", type =float, default = 0.0001, help="Difference in the dual bound required for stopping." )
+    parser.add_argument("--p", type =float, default = 0.0001, help="Ratio of the secants slope for stopping criterion.")
+    parser.add_argument("--k_batches", type = int, default = 5, help = "Number of required iterations with no change in the primal value.")
     return parser.parse_args()
 
 
@@ -88,8 +89,9 @@ def main():
                                   unary_side=args.unary_side)
 
     solver = construct_solver(deco, args)
-    print(f"Type:  {type(args.epsilon_lb)} , {type(args.epsilon_ub)} , {type(args.k_batches)}")
-    solver.set_stopping_criterion(args.epsilon_lb, args.epsilon_ub, args.k_batches )
+    #print(f"Type:  {type(args.epsilon_lb)} , {type(args.epsilon_ub)} , {type(args.k_batches)}")
+    #solver.set_stopping_criterion(args.epsilon_lb, args.epsilon_ub, args.k_batches )
+    solver.set_stopping_criterion(args.p, args.k_batches)
 
     if args.seed:
         print(f'initializing random seed to {args.seed}')
