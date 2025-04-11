@@ -32,7 +32,8 @@ public:
   }
 
 protected:
-  void assert_index(const index idx0, const index idx1) const
+  [[maybe_unused]] 
+  void assert_index([[maybe_unused]] const index idx0, [[maybe_unused]] const index idx1) const
   {
     assert(idx0 < dim0_);
     assert(idx1 < dim1_);

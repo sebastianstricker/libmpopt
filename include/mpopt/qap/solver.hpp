@@ -92,17 +92,17 @@ public:
     primals_candidate_.resize();
     ub_best_ = ub_candidate_ = infinity;
 
-    auto dump_assignment = [this]() {
-      bool first=true;
-      std::cout << "[";
-      for (const auto a : primals_best_.assignment()) {
-        if (!first)
-          std::cout << " ";
-        std::cout << a;
-        first = false;
-      }
-      std::cout << "]";
-    };
+    // auto dump_assignment = [this]() {
+    //   bool first=true;
+    //   std::cout << "[";
+    //   for (const auto a : primals_best_.assignment()) {
+    //     if (!first)
+    //       std::cout << " ";
+    //     std::cout << a;
+    //     first = false;
+    //   }
+    //   std::cout << "]";
+    // };
 
     signal_handler h;
     std::cout.precision(std::numeric_limits<cost>::max_digits10);
@@ -121,7 +121,7 @@ public:
 
       single_pass<true>(greedy_generations);
 
-      const auto lb = this->lower_bound();
+      // const auto lb = this->lower_bound();
       this->iterations_ += batch_size;
 
       const auto clock_end = clock_type::now();
@@ -141,7 +141,7 @@ public:
     // iterations at all. In those cases we run the greedy heurisitic the
     // specified number of times and fuse the solutions together.
     if (max_batches == 0) {
-      const auto lb = this->lower_bound();
+      // const auto lb = this->lower_bound();
       for (int i = 0; i < greedy_generations; ++i) {
         const auto clock_start = clock_type::now();
         primal_step();

@@ -96,6 +96,7 @@ public:
   bool is_primal_set() const { return primal_ != primal_unset; }
 
 protected:
+  [[maybe_unused]] 
   void assert_index([[maybe_unused]] const index idx) const { assert(idx < costs_.size()); }
 
   fixed_vector_alloc_gen<cost, ALLOCATOR> costs_;

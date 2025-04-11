@@ -4,7 +4,7 @@
 extern "C" {
   static volatile sig_atomic_t mpopt_signaled;
 
-  void mpopt_signal_handler(int sig)
+  void mpopt_signal_handler([[maybe_unused]] int sig)
   {
     mpopt_signaled = 1;
   }

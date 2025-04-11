@@ -22,7 +22,7 @@ public:
   auto upper_bound() const { return derived_this()->graph_.upper_bound(); }
   auto reset_primal() const { return derived_this()->graph_.reset_primal(); }
 
-  void run(const int batch_size=default_batch_size, const int max_batches=default_max_batches)
+  void run([[maybe_unused]] const int batch_size=default_batch_size, [[maybe_unused]] const int max_batches=default_max_batches)
   {
     assert(false && "Not implemented!");
   }
