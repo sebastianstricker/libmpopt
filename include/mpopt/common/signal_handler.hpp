@@ -6,7 +6,7 @@
 extern "C" {
   static volatile sig_atomic_t mpopt_signaled;
 
-  void mpopt_signal_handler(int sig)
+  void mpopt_signal_handler([[maybe_unused]] int sig)
   {
     if (sig == SIGALRM) {
       write(1, "\nTimeout.\n", 10);

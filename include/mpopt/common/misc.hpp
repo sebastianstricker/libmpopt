@@ -5,7 +5,7 @@ namespace mpopt {
 
 template<typename FORWARD_ITERATOR_DATA, typename FORWARD_ITERATOR_BOOL>
 auto min_element(FORWARD_ITERATOR_DATA data_begin, FORWARD_ITERATOR_DATA data_end,
-                 FORWARD_ITERATOR_BOOL active_begin, FORWARD_ITERATOR_BOOL active_end)
+                 FORWARD_ITERATOR_BOOL active_begin, [[maybe_unused]] FORWARD_ITERATOR_BOOL active_end)
 {
   assert(std::distance(active_begin, active_end) >= std::distance(data_begin, data_end));
   auto minimum = data_end;

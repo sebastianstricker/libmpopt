@@ -163,15 +163,15 @@ struct transition_messages {
 
         edge.node1->factor.primal().set_incoming(edge.slot1);
         for (const auto& conflict_edge : edge.node1->conflicts) {
-          conflict_messages::template propagate_primal_to_conflict(conflict_edge.node);
-          conflict_messages::template propagate_primal_to_detections(conflict_edge.node);
+          conflict_messages::propagate_primal_to_conflict(conflict_edge.node);
+          conflict_messages::propagate_primal_to_detections(conflict_edge.node);
         }
 
         if (edge.is_division()) {
           edge.node2->factor.primal().set_incoming(edge.slot2);
           for (const auto& conflict_edge : edge.node2->conflicts) {
-            conflict_messages::template propagate_primal_to_conflict(conflict_edge.node);
-            conflict_messages::template propagate_primal_to_detections(conflict_edge.node);
+            conflict_messages::propagate_primal_to_conflict(conflict_edge.node);
+            conflict_messages::propagate_primal_to_detections(conflict_edge.node);
           }
         }
       }
@@ -182,15 +182,15 @@ struct transition_messages {
 
         edge.node1->factor.primal().set_outgoing(edge.slot1);
         for (const auto& conflict_edge : edge.node1->conflicts) {
-          conflict_messages::template propagate_primal_to_conflict(conflict_edge.node);
-          conflict_messages::template propagate_primal_to_detections(conflict_edge.node);
+          conflict_messages::propagate_primal_to_conflict(conflict_edge.node);
+          conflict_messages::propagate_primal_to_detections(conflict_edge.node);
         }
 
         if (edge.is_division()) {
           edge.node2->factor.primal().set_incoming(edge.slot2);
           for (const auto& conflict_edge : edge.node2->conflicts) {
-            conflict_messages::template propagate_primal_to_conflict(conflict_edge.node);
-            conflict_messages::template propagate_primal_to_detections(conflict_edge.node);
+            conflict_messages::propagate_primal_to_conflict(conflict_edge.node);
+            conflict_messages::propagate_primal_to_detections(conflict_edge.node);
           }
         }
       }

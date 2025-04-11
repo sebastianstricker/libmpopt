@@ -315,8 +315,8 @@ protected:
     }
 
     for (const uniqueness_node_type* node : graph_->uniqueness()) {
-      int assigned = 0;
-      node->template traverse_unaries([&](link_info<unary_node_type> link, index slot) {
+      [[maybe_unused]] int assigned = 0;
+      node->traverse_unaries([&](link_info<unary_node_type> link, [[maybe_unused]] index slot) {
         if (link.node->factor.primal() == link.slot) {
           assigned++;
         }
