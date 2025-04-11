@@ -167,8 +167,8 @@ public:
 protected:
   void assert_index(const index idx0, const index idx1) const
   {
-    assert(idx0 >= 0 && idx0 < no_labels0_);
-    assert(idx1 >= 0 && idx1 < no_labels1_);
+    assert(idx0 < no_labels0_);
+    assert(idx1 < no_labels1_);
     assert(idx0 * idx1 < costs_.size());
   }
 

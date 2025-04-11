@@ -185,7 +185,6 @@ public:
 
   unary_node_type* add_unary(index idx, index number_of_labels, index number_of_forward, index number_of_backward)
   {
-    assert(number_of_labels >= 0);
     assert(idx == unaries_.size());
     assert(uniqueness_.size() == 0);
     assert(pairwise_.size() == 0);
@@ -207,7 +206,6 @@ public:
 
   uniqueness_node_type* add_uniqueness(index idx, index number_of_unaries, index label_idx)
   {
-    assert(number_of_unaries >= 0);
     assert(idx == uniqueness_.size());
     assert(pairwise_.size() == 0);
 
@@ -229,7 +227,6 @@ public:
 
   pairwise_node_type* add_pairwise(index idx, index number_of_labels0, index number_of_labels1)
   {
-    assert(number_of_labels0 >= 0 && number_of_labels1 >= 0);
     assert(idx == pairwise_.size());
 
     pairwise_.push_back(nullptr);
@@ -246,9 +243,9 @@ public:
 
   void add_pairwise_link(index idx_unary0, index idx_unary1, index idx_pairwise)
   {
-    assert(idx_unary0 >= 0 && idx_unary0 < unaries_.size());
-    assert(idx_unary1 >= 0 && idx_unary1 < unaries_.size());
-    assert(idx_pairwise >= 0 && idx_pairwise < pairwise_.size());
+    assert(idx_unary0   < unaries_.size());
+    assert(idx_unary1   < unaries_.size());
+    assert(idx_pairwise < pairwise_.size());
 
     auto* unary0 = unaries_[idx_unary0];
     auto* unary1 = unaries_[idx_unary1];
@@ -275,18 +272,18 @@ public:
 
   void add_uniqueness_link(index idx_unary, index label, index idx_uniqueness, index slot)
   {
-    assert(idx_unary >= 0 && idx_unary < unaries_.size());
-    assert(idx_uniqueness >= 0 && idx_uniqueness < uniqueness_.size());
+    assert(idx_unary < unaries_.size());
+    assert(idx_uniqueness < uniqueness_.size());
 
     auto* unary = unaries_[idx_unary];
     auto* uniqueness = uniqueness_[idx_uniqueness];
 
-    assert(label >= 0 && label < unary->uniqueness.size());
+    assert(label < unary->uniqueness.size());
     assert(!unary->uniqueness[label].is_prepared());
     unary->uniqueness[label].node = uniqueness;
     unary->uniqueness[label].slot = slot;
 
-    assert(slot >= 0 && slot < uniqueness->unaries.size());
+    assert(slot < uniqueness->unaries.size());
     assert(!uniqueness->unaries[slot].is_prepared());
     uniqueness->unaries[slot].node = unary;
     uniqueness->unaries[slot].slot = label;

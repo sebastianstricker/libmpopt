@@ -77,13 +77,13 @@ public:
 
   index get(index idx) const
   {
-    assert(idx >= 0 && idx < data_.size());
+    assert(idx < data_.size());
     return data_[idx];
   }
 
   void set(index idx, index label)
   {
-    assert(idx >= 0 && idx < data_.size());
+    assert(idx < data_.size());
     data_[idx] = label;
   }
 

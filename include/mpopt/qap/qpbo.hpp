@@ -62,8 +62,8 @@ public:
   void add_factor(const unary_node_type* node, index label0, index label1)
   {
     assert(node != nullptr);
-    assert(label0 >= 0 && label0 < node->factor.size());
-    assert(label1 >= 0 && label1 < node->factor.size());
+    assert(label0 < node->factor.size());
+    assert(label1 < node->factor.size());
     assert(!unaries_[node->idx]);
 
     auto& unary = unaries_[node->idx].emplace(label0, label1);

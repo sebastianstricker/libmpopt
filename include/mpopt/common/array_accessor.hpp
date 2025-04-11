@@ -16,17 +16,17 @@ public:
   {
     assert_index(idx0, idx1);
     size_t result = idx0 * dim1_ + idx1;
-    assert(result >= 0 && result < dim0_ * dim1_);
+    assert(result < dim0_ * dim1_);
     return result;
   }
 
   std::tuple<index, index> to_nonlinear(const index idx) const
   {
-    assert(idx >= 0 && idx < dim0_ * dim1_);
+    assert(idx < dim0_ * dim1_);
     const index idx0 = idx / dim1_;
     const index idx1 = idx % dim1_;
-    assert(idx0 >= 0 && idx0 < dim0_);
-    assert(idx1 >= 0 && idx1 < dim1_);
+    assert(idx0 < dim0_);
+    assert(idx1 < dim1_);
     assert(to_linear(idx0, idx1) == idx);
     return std::tuple(idx0, idx1);
   }
@@ -34,8 +34,8 @@ public:
 protected:
   void assert_index(const index idx0, const index idx1) const
   {
-    assert(idx0 >= 0 && idx0 < dim0_);
-    assert(idx1 >= 0 && idx1 < dim1_);
+    assert(idx0 < dim0_);
+    assert(idx1 < dim1_);
   }
 
   index dim0_, dim1_;
