@@ -35,7 +35,7 @@ See Meson documentation on subprojects for details.
 
 # Dependencies
 The project has a dependency to ``libqpbo`` (Quadratic Pseudo Boolean Optimization (QPBO) Library).
-Download from: https://gitlab.com/sebastianstricker/libqpbo
+Download from: https://github.com/sebastianstricker/libqpbo
 
 In order for the ``libmpopt`` to work as intended, place ``libqpbo`` as another subproject next to it.
 
