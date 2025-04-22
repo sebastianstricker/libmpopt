@@ -5,32 +5,22 @@ namespace mpopt {
 
 class memory_block {
 public:
-  static constexpr size_t size_mib = size_t(1) * 1024 * 1024;
-  static constexpr size_t size_512mib = size_mib * 512;
-  static constexpr size_t size_gib = size_mib * 1024;
-  static constexpr size_t size_1024gib = size_gib * 1024;
+  static constexpr size_t size_kib = size_t(1) * 1024;
 
-  memory_block()
+  memory_block(size_t memory_kb)
   : memory_(0)
-  , size_(size_1024gib)
+  , size_(memory_kb * size_kib)
   , current_(0)
-  , finalized_(false)
   {
-    while (memory_ == 0 && size_ >= size_512mib) {
-      auto result = reinterpret_cast<uintptr_t>(std::malloc(size_));
-      if (result == 0)
-        size_ -= size_512mib;
-      else
-        memory_ = result;
+    memory_ = reinterpret_cast<uintptr_t>(std::malloc(size_));
+    if (memory_ == 0){
+        std::cerr << "Memory allocation failed. Attempted to allocate" << size_ << "KiB of memory." << std::endl;
+        throw std::bad_alloc();
     }
 
 #ifndef NDEBUG
-      //std::cout << "[mem] ctor: size=" << size_ << "B (" << (1.0f * size_ / size_gib) << "GiB) -> memory_=" << reinterpret_cast<void*>(memory_) << std::endl;
+      std::cout << "[mem] ctor: size=" << size_ << "B (" << (1.0f * size_ / (size_kib * 1024)) << "MiB) -> memory_=" << reinterpret_cast<void*>(memory_) << std::endl;
 #endif
-
-    if (memory_ == 0)
-      throw std::bad_alloc();
-
     current_ = memory_;
   }
 
@@ -43,43 +33,26 @@ public:
 
   void align(size_t a)
   {
-    if (memory_ % a != 0)
-      allocate(a - memory_ % a);
+    if (current_ % a != 0)
+      allocate(a - current_ % a);
   }
 
   uintptr_t allocate(size_t s)
   {
-    assert(!finalized_);
-    if (current_ + s >= memory_ + size_)
-      throw std::bad_alloc();
+    if (current_ + s >= memory_ + size_){
+        std::cerr << "Ran out of memory while building optimization graph." << std::endl;
+        throw std::bad_alloc();
+    }
 
     auto result = current_;
     current_ += s;
     return result;
   }
 
-  bool is_finalized() const { return finalized_; }
-
-  void finalize()
-  {
-    assert(!finalized_);
-    auto current_size = current_ - memory_;
-    auto result = reinterpret_cast<uintptr_t>(std::realloc(reinterpret_cast<void*>(memory_), current_size));
-    // result could be 0 (error) or memory could have been relocated
-    if (result != memory_)
-      throw std::bad_alloc();
-    size_ = current_size;
-#ifndef NDEBUG
-      //std::cout << "[mem] finalize: size=" << size_ << " (" << (1.0f * size_ / size_mib) << " MiB)" << std::endl;
-#endif
-    finalized_ = true;
-  }
-
 protected:
   uintptr_t memory_;
   size_t size_;
   uintptr_t current_;
-  bool finalized_;
 };
 
 template<typename T>

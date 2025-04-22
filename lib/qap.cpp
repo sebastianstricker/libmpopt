@@ -1,5 +1,6 @@
 #include <mpopt/qap.hpp>
 #include <mpopt/qap.h>
+#include <cstddef>
 
 using allocator_type = mpopt::block_allocator<mpopt::cost>;
 using solver_type = mpopt::qap::solver<allocator_type>;
@@ -13,8 +14,8 @@ struct mpopt_qap_solver_t {
   allocator_type allocator;
   solver_type solver;
 
-  mpopt_qap_solver_t()
-  : memory()
+  mpopt_qap_solver_t(size_t memory_kib)
+  : memory(memory_kib)
   , allocator(memory)
   , solver(allocator)
   { }
@@ -38,9 +39,8 @@ extern "C" {
 // solver API
 //
 
-mpopt_qap_solver* mpopt_qap_solver_create() { return new mpopt_qap_solver; }
+mpopt_qap_solver* mpopt_qap_solver_create(size_t memory_kib) { return new mpopt_qap_solver(memory_kib); }
 void mpopt_qap_solver_destroy(mpopt_qap_solver* s) { delete s; }
-void mpopt_qap_solver_finalize(mpopt_qap_solver* s) { s->memory.finalize(); }
 
 mpopt_qap_graph* mpopt_qap_solver_get_graph(mpopt_qap_solver* s) { return to_graph(&s->solver.get_graph()); }
 
