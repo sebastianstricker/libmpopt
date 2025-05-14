@@ -1,6 +1,6 @@
 #ifndef LIBMPOPT_QAP_SOLVER_HPP
 #define LIBMPOPT_QAP_SOLVER_HPP
-
+//#include <cmath> -> Wäre benötigt um betragfunktion zu nutzen #
 namespace mpopt {
 namespace qap {
 
@@ -85,7 +85,70 @@ public:
     }
   }
 
-  void run(const int batch_size=default_batch_size, const int max_batches=default_max_batches, int greedy_generations=default_greedy_generations)
+// struct stopping_criterion_variables {
+//     float epsilon_lb;
+//     float epsilon_ub;
+//     int k_batches;
+// };
+
+// stopping_criterion_variables stopping_criterion;
+
+// double last_lb = std::numeric_limits<double>::infinity();
+//double last_ub_best = std::numeric_limits<double>::infinity();
+std::vector<double> ub_list;
+
+int k_index = 0;
+
+struct stopping_criterion_variables {
+    float p;
+    int k_batches;
+};
+
+stopping_criterion_variables stopping_criterion;
+
+void set_stopping_criterion(float p, int k_batches) {
+    this->stopping_criterion.p = p;
+    this->stopping_criterion.k_batches = k_batches;
+}
+
+// void set_stopping_criterion(float epsilon_lb = 0.0001, float epsilon_ub = 0.01, int k_batches = 4) { //Default variables are also set in cmdline/dd.py
+//     this-> stopping_criterion.epsilon_lb = epsilon_lb;
+//     this ->stopping_criterion.epsilon_ub = epsilon_ub;
+//     this -> stopping_criterion.k_batches = k_batches;}
+
+//  bool check_stopping_criterion(double lb, double ub_best_){ 
+//     if (std::abs(last_lb - lb) < stopping_criterion.epsilon_lb) { 
+//         if (std::abs(last_ub_best - ub_best_) <= stopping_criterion.epsilon_ub) {
+//             if (k_index == stopping_criterion.k_batches) {
+//                 return true;
+//             } else {
+//                 k_index += 1;
+//             }
+//         }
+//     }
+//     last_lb = lb;
+//     last_ub_best = ub_best_;
+//     return false;
+// }
+
+bool check_stopping_criterion(){
+  if (ub_list.size() > 1){
+    if (std::abs(ub_list[ub_list.size()-1] - ub_list[static_cast<std::size_t>(std::ceil(double(ub_list.size() - 1) / 2.0))]) <= stopping_criterion.p* std::abs(ub_list[static_cast<std::size_t>(std::ceil(double(ub_list.size() - 1) / 2.0))] - ub_list[0])){
+      if (k_index == stopping_criterion.k_batches){
+        return true;
+      } else {
+        k_index += 1;
+    
+      }
+    }
+
+  }
+  else{
+    return false;
+  }
+}
+
+  void run(const int batch_size=default_batch_size, const int max_batches=default_max_batches, int greedy_generations=default_greedy_generations) 
   {
     graph_.check_structure();
     primals_best_.resize();
@@ -112,7 +175,7 @@ public:
         pairwise_messages::send_messages_to_unaries(node);
       }
     }
-
+    std::cout << "p Value for stipping criterion:" << stopping_criterion.p << std::endl;
     for (int i = 0; i < max_batches && !h.signaled(); ++i) {
       const auto clock_start = clock_type::now();
 
@@ -135,7 +198,19 @@ public:
       //           << "a=";
       // dump_assignment();
       // std::cout << "\n";
-    }
+
+      // if (check_stopping_criterion(lb, ub_best_)) {
+      //     std::cout << "Stopping criterion met:" << std::endl;
+      //     std::cout << "  - Change in dual value less than " << stopping_criterion.epsilon_lb << std::endl;
+      //     std::cout << "  - Change in dual value over the last " << stopping_criterion.k_batches << " iterations less than " << stopping_criterion.epsilon_ub << std::endl;
+      //     break;
+      // }
+      ub_list.push_back(ub_best_);
+      if (check_stopping_criterion()){
+        std::cout << "Stopping criterion met" << std::endl;
+        break;
+      }
+    }  
 
     // If max_batches is zero the caller does not want to run any dual
     // iterations at all. In those cases we run the greedy heurisitic the
@@ -300,6 +375,10 @@ protected:
 #endif
   primal_storage<ALLOCATOR> primals_best_, primals_candidate_;
   cost ub_best_, ub_candidate_;
+
+
+
+
   friend class ::mpopt::solver<solver<ALLOCATOR>>;
 
   bool fusion_moves_enabled_ = true;

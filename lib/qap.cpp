@@ -76,6 +76,8 @@ mpopt_qap_unary_node* mpopt_qap_graph_get_unary(mpopt_qap_graph* graph, int idx)
 mpopt_qap_uniqueness_node* mpopt_qap_graph_get_uniqueness(mpopt_qap_graph* graph, int idx) { return to_uniqueness(from_graph(graph)->get_uniqueness(idx)); }
 mpopt_qap_pairwise_node* mpopt_qap_graph_get_pairwise(mpopt_qap_graph* graph, int idx) { return to_pairwise(from_graph(graph)->get_pairwise(idx)); }
 void mpopt_qap_solver_set_fusion_moves_enabled(mpopt_qap_solver* s, bool enabled) { s->solver.set_fusion_moves_enabled(enabled); }
+//void mpopt_qap_solver_set_stopping_criterion(mpopt_qap_solver* s, float epsilon_lb, float epsilon_ub, int k_batches) { s->solver.set_stopping_criterion(epsilon_lb, epsilon_ub, k_batches); }
+void mpopt_qap_solver_set_stopping_criterion(mpopt_qap_solver* s, float p, int k_batches) { s->solver.set_stopping_criterion(p, k_batches); }
 void mpopt_qap_solver_set_dual_updates_enabled(mpopt_qap_solver* s, bool enabled) { s->solver.set_dual_updates_enabled(enabled); }
 void mpopt_qap_solver_set_local_search_enabled(mpopt_qap_solver* s, bool enabled) { s->solver.set_local_search_enabled(enabled); }
 void mpopt_qap_solver_set_grasp_alpha(mpopt_qap_solver* s, double alpha) { s->solver.set_grasp_alpha(alpha); }
