@@ -86,12 +86,11 @@ public:
   }
 
 std::vector<double> ub_list;
-
 int k_index = 0;
 
 struct stopping_criterion_variables {
-    float p;
-    int k_batches;
+    float p         = 1.0;
+    int k_batches   = 5;
 };
 
 stopping_criterion_variables stopping_criterion;
@@ -101,20 +100,32 @@ void set_stopping_criterion(float p, int k_batches) {
     this->stopping_criterion.k_batches = k_batches;
 }
 
+// We check if the stopping criterion has been met stopping_criterion.k_batches times in a row.
 bool check_stopping_criterion(){
-  if (ub_list.size() > 1){
-    if (std::abs(ub_list[ub_list.size()-1] - ub_list[static_cast<std::size_t>(std::ceil(double(ub_list.size() - 1) / 2.0))]) <= stopping_criterion.p* std::abs(ub_list[static_cast<std::size_t>(std::ceil(double(ub_list.size() - 1) / 2.0))] - ub_list[0])){
-      if (k_index == stopping_criterion.k_batches){
-        return true;
-      } else {
-        k_index += 1;
-      }
+    // Must contain at least 2 lower bound entries.
+    if (ub_list.size() < 2)
+      return false; 
+
+    const auto & last_ub    = ub_list.back();
+    const auto & middle_ub  = ub_list[(ub_list.size() / 2)];
+    const auto & first_ub   = ub_list[0];
+
+    bool has_converged = ( std::abs(last_ub - middle_ub) <= stopping_criterion.p * std::abs(middle_ub - first_ub) );
+
+    if (has_converged){
+        if (k_index == stopping_criterion.k_batches){
+            return true;
+        }
+        else {
+            k_index++;
+            return false;
+        }
     }
-  }
-  else{
+
+    k_index = 0;
     return false;
   }
-}
+  
 
   void run(const int batch_size=default_batch_size, const int max_batches=default_max_batches, int greedy_generations=default_greedy_generations) 
   {

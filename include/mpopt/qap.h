@@ -58,7 +58,6 @@ mpopt_qap_uniqueness_node* mpopt_qap_graph_get_uniqueness(mpopt_qap_graph* graph
 mpopt_qap_pairwise_node* mpopt_qap_graph_get_pairwise(mpopt_qap_graph* graph, int idx);
 void mpopt_qap_solver_set_fusion_moves_enabled(mpopt_qap_solver* s, bool enabled);
 void mpopt_qap_solver_set_dual_updates_enabled(mpopt_qap_solver* s, bool enabled);
-//void mpopt_qap_solver_set_stopping_criterion(mpopt_qap_solver* s, float epsilon_lb, float epsilon_ub, int k_batches);
 void mpopt_qap_solver_set_stopping_criterion(mpopt_qap_solver* s, float p, int k_batches);
 void mpopt_qap_solver_set_local_search_enabled(mpopt_qap_solver* s, bool enabled);
 void mpopt_qap_solver_set_grasp_alpha(mpopt_qap_solver* s, double alpha);
