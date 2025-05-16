@@ -154,7 +154,7 @@ bool check_stopping_criterion(){
         pairwise_messages::send_messages_to_unaries(node);
       }
     }
-    std::cout << "p Value for stipping criterion:" << stopping_criterion.p << std::endl;
+    //std::cout << "p Value for stopping criterion:" << stopping_criterion.p << std::endl;
     for (int i = 0; i < max_batches && !h.signaled(); ++i) {
       const auto clock_start = clock_type::now();
 
@@ -180,7 +180,7 @@ bool check_stopping_criterion(){
 
       ub_list.push_back(ub_best_);
       if (check_stopping_criterion()){
-        std::cout << "Stopping criterion met" << std::endl;
+        std::cout << "Stopping criterion met in iteration " << i << std::endl;
         break;
       }
     }  
