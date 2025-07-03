@@ -10,7 +10,7 @@ Supported combinatorial optimization problems:
 
   - Graphical Models (by reimplementing the TRW-S technique, see references)
   - Cell Tracking Problems
-  - Quadratic Assignment Problems
+  - Quadratic Assignment Problems (Now available as a [Python package][pylibmgm_website]!)
   - Maximum Weight Independent Set Problems
 
 
@@ -26,7 +26,7 @@ Supported combinatorial optimization problems:
 
 - L. Hutschenreiter, S. Haller, L. Feineis, C. Rother, D. Kainmüller, B. Savchynskyy.<br>
   **“Fusion Moves for Graph Matching”**.<br>
-  ICCV 2021. [[PDF][iccv2021]]
+  ICCV 2021. [[PDF][iccv2021]] [[Website][iccv2021_website]][[Python package][pylibmgm_website]]
 
 - S. Haller, M. Prakash, L. Hutschenreiter, T. Pietzsch, C. Rother, F. Jug, P. Swoboda, B. Savchynskyy.<br>
   **“A Primal-Dual Solver for Large-Scale Tracking-by-Assignment”**.<br>
@@ -39,10 +39,12 @@ Supported combinatorial optimization problems:
 [pami2006]: https://pub.ist.ac.at/~vnk/papers/trw_maxproduct_tr2.pdf
 [aistats2020]: https://arxiv.org/pdf/2004.06375.pdf
 [iccv2021]: https://arxiv.org/pdf/2101.12085.pdf
+[iccv2021_website]: https://vislearn.github.io/libmpopt/iccv2021/
 [eccv2022]: https://arxiv.org/pdf/2207.00291.pdf
 [eccv2022_website]: https://vislearn.github.io/gmbench/
 [arxiv2024]: https://arxiv.org/pdf/2408.02086
 [arxiv2024_website]: https://vislearn.github.io/libmpopt/mwis2024/
+[pylibmgm_website]: https://pylibmgm.readthedocs.io/en/latest/
 
 
 ## Setting up a Development Environment
