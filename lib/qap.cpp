@@ -14,8 +14,8 @@ struct mpopt_qap_solver_t {
   allocator_type allocator;
   solver_type solver;
 
-  mpopt_qap_solver_t(size_t memory_kib)
-  : memory(memory_kib)
+  mpopt_qap_solver_t()
+  : memory()
   , allocator(memory)
   , solver(allocator)
   { }
@@ -39,7 +39,7 @@ extern "C" {
 // solver API
 //
 
-mpopt_qap_solver* mpopt_qap_solver_create(size_t memory_kib) { return new mpopt_qap_solver(memory_kib); }
+mpopt_qap_solver* mpopt_qap_solver_create() { return new mpopt_qap_solver; }
 void mpopt_qap_solver_destroy(mpopt_qap_solver* s) { delete s; }
 
 mpopt_qap_graph* mpopt_qap_solver_get_graph(mpopt_qap_solver* s) { return to_graph(&s->solver.get_graph()); }

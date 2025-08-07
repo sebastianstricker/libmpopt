@@ -4,45 +4,66 @@
 namespace mpopt {
 
 class memory_block {
-public:
+public:  
   static constexpr size_t size_kib = size_t(1) * 1024;
+  static constexpr size_t size_mib = size_t(1) * 1024 * 1024;
+  static constexpr size_t size_512mib = size_mib * 512;
+  static constexpr size_t size_gib = size_mib * 1024;
+  static constexpr size_t size_256gib = size_gib * 256;
 
-  memory_block(size_t memory_kb)
+  static constexpr size_t COMMIT_GRANULARITY = 4 * size_mib; // 4 MiB
+
+  memory_block()
   : memory_(0)
-  , size_(memory_kb * size_kib)
+  , size_(size_256gib)
   , current_(0)
+  , committed_(0)
   {
-    memory_ = reinterpret_cast<uintptr_t>(std::malloc(size_));
-    if (memory_ == 0){
-        std::cerr << "Memory allocation failed. Attempted to allocate" << size_ << "KiB of memory." << std::endl;
-        throw std::bad_alloc();
+    // RESERVE VIRTUAL ADDRESS SPACE
+    while (!reserve_memory(size_) && size_ >= size_512mib) {
+      size_ -= size_512mib;
     }
 
 #ifndef NDEBUG
-      std::cout << "[mem] ctor: size=" << size_ << "B (" << (1.0f * size_ / (size_kib * 1024)) << "MiB) -> memory_=" << reinterpret_cast<void*>(memory_) << std::endl;
+    std::cout << "[mem] ctor: size=" << size_ << "B (" << (1.0f * size_ / (size_kib * 1024)) << "MiB) -> memory_=" << reinterpret_cast<void*>(memory_) << std::endl;
 #endif
+
+    if (memory_ == 0) {
+        std::cerr << "Could not allocate memory while building optimization graph." << std::endl;
+        throw std::bad_alloc();
+    }
+
     current_ = memory_;
+    committed_ = memory_;
   }
 
   ~memory_block()
   {
     if (memory_ != 0) {
-      std::free(reinterpret_cast<void*>(memory_));
+      #ifdef _WIN32
+        VirtualFree(reinterpret_cast<void*>(memory_), 0, MEM_RELEASE);
+      #else  
+        munmap(reinterpret_cast<void*>(memory_), size_);
+      #endif
     }
+
   }
 
   void align(size_t a)
   {
-    if (current_ % a != 0)
-      allocate(a - current_ % a);
+    auto misalignment = current_ % a;
+    if (misalignment != 0)
+      allocate(a - misalignment);
   }
 
   uintptr_t allocate(size_t s)
   {
     if (current_ + s >= memory_ + size_){
-        std::cerr << "Ran out of memory while building optimization graph." << std::endl;
-        throw std::bad_alloc();
+      std::cerr << "Ran out of memory while building optimization graph." << std::endl;
+      throw std::bad_alloc();
     }
+
+    commit_memory(s);
 
     auto result = current_;
     current_ += s;
@@ -53,6 +74,49 @@ protected:
   uintptr_t memory_;
   size_t size_;
   uintptr_t current_;
+  uintptr_t committed_;
+
+private:
+
+  bool reserve_memory(size_t s) {
+      // Must differentiated between Windows and MacOS/Linux
+      #ifdef _WIN32
+        auto result = VirtualAlloc(nullptr, s, MEM_RESERVE, PAGE_READWRITE);
+        if (result != NULL)
+          memory_ = reinterpret_cast<uintptr_t>(result);
+      #else
+        auto result = mmap(nullptr, s, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if (result != MAP_FAILED)
+          memory_ = reinterpret_cast<uintptr_t>(result);
+      #endif
+    
+    return memory_ != 0; // Returns true if memory was successfully reserved.
+  }
+
+  void commit_memory(size_t s)
+  {
+    auto target = current_ + s;
+    if (target <= committed_) {
+      return;
+    }
+
+    // Ensure that we commit memory in multiples of COMMIT_GRANULARITY
+    uintptr_t new_commit = ((target + COMMIT_GRANULARITY - 1) / COMMIT_GRANULARITY) * COMMIT_GRANULARITY;
+
+    #ifdef _WIN32
+      if (VirtualAlloc(reinterpret_cast<void*>(committed_), new_commit - committed_, MEM_COMMIT, PAGE_READWRITE) == NULL) {
+        std::cerr << "Could not commit memory while building optimization graph." << std::endl;
+        throw std::bad_alloc();
+      }
+    #else
+      if (mprotect(reinterpret_cast<void*>(committed_), new_commit - committed_, PROT_READ | PROT_WRITE) != 0) {
+        std::cerr << "Could not commit memory while building optimization graph." << std::endl;
+        throw std::bad_alloc();
+      }
+    #endif
+
+    committed_ = new_commit;
+  }
 };
 
 template<typename T>
