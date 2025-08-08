@@ -36,7 +36,6 @@ extern "C" {
 
 mpopt_gm_solver* mpopt_gm_solver_create() { return new mpopt_gm_solver; }
 void mpopt_gm_solver_destroy(mpopt_gm_solver* s) { delete s; }
-void mpopt_gm_solver_finalize(mpopt_gm_solver* s) { s->memory.finalize(); }
 
 mpopt_gm_graph* mpopt_gm_solver_get_graph(mpopt_gm_solver* s) { return to_graph(&s->solver.get_graph()); }
 

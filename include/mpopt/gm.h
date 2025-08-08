@@ -12,7 +12,6 @@ typedef struct mpopt_gm_pairwise_node_t mpopt_gm_pairwise_node;
 
 mpopt_gm_solver* mpopt_gm_solver_create();
 void mpopt_gm_solver_destroy(mpopt_gm_solver* s);
-void mpopt_gm_solver_finalize(mpopt_gm_solver* s);
 mpopt_gm_graph* mpopt_gm_solver_get_graph(mpopt_gm_solver* s);
 mpopt_gm_unary_node* mpopt_gm_graph_add_unary(mpopt_gm_graph* graph, int idx, int number_of_labels, int number_of_forward, int number_of_backward);
 mpopt_gm_unary_node* mpopt_gm_graph_get_unary(mpopt_gm_graph* graph, int idx);

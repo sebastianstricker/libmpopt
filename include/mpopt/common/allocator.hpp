@@ -70,23 +70,6 @@ public:
     return result;
   }
 
-  bool is_finalized() const { return finalized_; }
-
-  void finalize()
-  {
-    assert(!finalized_);
-    auto current_size = current_ - memory_;
-    auto result = reinterpret_cast<uintptr_t>(std::realloc(reinterpret_cast<void*>(memory_), current_size));
-    // result could be 0 (error) or memory could have been relocated
-    if (result != memory_)
-      throw std::bad_alloc();
-    size_ = current_size;
-#ifndef NDEBUG
-      std::cout << "[mem] finalize: size=" << size_ << " (" << (1.0f * size_ / size_mib) << " MiB)" << std::endl;
-#endif
-    finalized_ = true;
-  }
-
 protected:
   uintptr_t memory_;
   size_t size_;

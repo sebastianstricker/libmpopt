@@ -13,7 +13,6 @@ typedef struct mpopt_mwis_solver_t mpopt_mwis_solver;
 
 mpopt_mwis_solver* mpopt_mwis_solver_create();
 void mpopt_mwis_solver_destroy(mpopt_mwis_solver* s);
-void mpopt_mwis_solver_finalize(mpopt_mwis_solver* s);
 
 int mpopt_mwis_solver_add_node(mpopt_mwis_solver* s, double cost);
 int mpopt_mwis_solver_add_clique(mpopt_mwis_solver* s, int* indices, int size);

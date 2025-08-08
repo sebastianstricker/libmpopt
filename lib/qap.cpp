@@ -40,7 +40,6 @@ extern "C" {
 
 mpopt_qap_solver* mpopt_qap_solver_create() { return new mpopt_qap_solver; }
 void mpopt_qap_solver_destroy(mpopt_qap_solver* s) { delete s; }
-void mpopt_qap_solver_finalize(mpopt_qap_solver* s) { s->memory.finalize(); }
 
 mpopt_qap_graph* mpopt_qap_solver_get_graph(mpopt_qap_solver* s) { return to_graph(&s->solver.get_graph()); }
 

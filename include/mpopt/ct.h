@@ -16,7 +16,6 @@ typedef struct mpopt_ct_conflict_t mpopt_ct_conflict;
 
 mpopt_ct_tracker* mpopt_ct_tracker_create();
 void mpopt_ct_tracker_destroy(mpopt_ct_tracker* t);
-void mpopt_ct_tracker_finalize(mpopt_ct_tracker* t);
 
 mpopt_ct_graph* mpopt_ct_tracker_get_graph(mpopt_ct_tracker* t);
 mpopt_ct_detection* mpopt_ct_graph_add_detection(mpopt_ct_graph* g, int timestep, int detection, int number_of_incoming, int number_of_outgoing, int number_of_conflicts);
