@@ -7,6 +7,7 @@ import numpy
 
 DEFAULT_GREEDY_GENERATIONS = 10
 INFINITY_COST = 1e99
+DEFAULT_ALPHA = 0.25
 
 
 class ModelDecomposition:
@@ -145,6 +146,28 @@ class Solver(BaseSolver):
     def __init__(self):
         super().__init__(lib)
 
+    def set_fusion_moves_enabled(self, enabled):
+        self.lib.solver_set_fusion_moves_enabled(self.solver, enabled)
+
+    def set_local_search_enabled(self, enabled):
+        self.lib.solver_set_local_search_enabled(self.solver, enabled)
+
+    def set_dual_updates_enabled(self, enabled):
+        self.lib.solver_set_dual_updates_enabled(self.solver, enabled)
+
+    def set_grasp_alpha(self, alpha):
+        assert(0 < alpha <= 1)
+        self.lib.solver_set_grasp_alpha(self.solver, alpha)
+
+    def use_grasp(self):
+        self.lib.solver_use_grasp(self.solver)
+
+    def use_greedy(self):
+        self.lib.solver_use_greedy(self.solver)
+
+    def set_random_seed(self, seed):
+        return self.lib.solver_set_random_seed(self.solver, seed)
+
     def run(self, batch_size=DEFAULT_BATCH_SIZE, max_batches=DEFAULT_MAX_BATCHES, greedy_generations=DEFAULT_GREEDY_GENERATIONS):
         return self.lib.solver_run(self.solver, batch_size, max_batches, greedy_generations)
 
@@ -183,7 +206,7 @@ def construct_solver(deco):
     # insert uniqueness factors
     if deco.with_uniqueness:
         for idx_uniqueness, (label_idx, assigned_in) in enumerate(deco.label_set.items()):
-            f = lib.graph_add_uniqueness(g, idx_uniqueness, len(assigned_in))
+            f = lib.graph_add_uniqueness(g, idx_uniqueness, len(assigned_in), label_idx)
             for slot, assignment_idx in enumerate(assigned_in):
                 assignment = deco.model.assignments[assignment_idx]
                 assert getattr(assignment, deco.label_side) == label_idx

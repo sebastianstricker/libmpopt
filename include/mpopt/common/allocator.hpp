@@ -142,7 +142,7 @@ public:
     return reinterpret_cast<T*>(mem);
   }
 
-  void deallocate(T* ptr, size_t n = 1) { }
+  void deallocate([[maybe_unused]] T* ptr, [[maybe_unused]] size_t n = 1) { }
 
 protected:
   memory_block* block_;

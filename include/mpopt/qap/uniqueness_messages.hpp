@@ -82,7 +82,7 @@ private:
   static cost local_unary_lower_bound(const UNARY_NODE* node)
   {
     cost result = node->factor.lower_bound();
-    node->traverse_uniqueness([&result](const auto& link, const index slot) {
+    node->traverse_uniqueness([&result](const auto& link, [[maybe_unused]] const index slot) {
       result += link.node->factor.lower_bound();
     });
     return result;
@@ -92,7 +92,7 @@ private:
   static cost local_uniqueness_lower_bound(const UNIQUENESS_NODE* node)
   {
     cost result = node->factor.lower_bound();
-    node->traverse_unaries([&result](const auto& link, const index slot) {
+    node->traverse_unaries([&result](const auto& link, [[maybe_unused]] const index slot) {
       result += link.node->factor.lower_bound();
     });
     return result;

@@ -13,7 +13,6 @@ Supported combinatorial optimization problems:
   - Quadratic Assignment Problems (Now available as a [Python package][pylibmgm_website]!)
   - Maximum Weight Independent Set Problems
 
-
 ## References
 
 - S. Haller, B. Savchynskyy.<br>
@@ -183,3 +182,11 @@ Installation is done by:
 ```sh
 ninja -C /path/to/build/directory install
 ```
+## Usage
+After successfully building the software, the following applications are available:
+
+- ct_jug:  Optimizer for *.jug cell tracking model files
+- gm_uai:  Optimizer for *.uai graphical model files.
+- qap_dd:  Optimizer for *.dd quadratic assignment model files.
+
+In general, the programs can be run with default parameters. However, feel free to experiment with the available options.

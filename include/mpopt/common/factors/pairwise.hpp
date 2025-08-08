@@ -161,11 +161,12 @@ public:
   }
 
   auto primal() { return std::tie(primal0_, primal1_); }
-  const auto primal() const { return std::tuple(primal0_, primal1_); }
+  auto primal() const { return std::tuple(primal0_, primal1_); }
   bool is_primal_set() const { return primal0_ != primal_unset && primal1_ != primal_unset; }
 
 protected:
-  void assert_index(const index idx0, const index idx1) const
+  [[maybe_unused]]
+  void assert_index([[maybe_unused]] const index idx0, [[maybe_unused]] const index idx1) const
   {
     assert(idx0 >= 0 && idx0 < no_labels0_);
     assert(idx1 >= 0 && idx1 < no_labels1_);
