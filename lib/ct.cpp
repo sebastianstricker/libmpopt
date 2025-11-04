@@ -36,7 +36,6 @@ extern "C" {
 
 mpopt_ct_tracker* mpopt_ct_tracker_create() { return new mpopt_ct_tracker; }
 void mpopt_ct_tracker_destroy(mpopt_ct_tracker* t) { delete t; }
-void mpopt_ct_tracker_finalize(mpopt_ct_tracker* t) { t->memory.finalize(); }
 
 mpopt_ct_graph* mpopt_ct_tracker_get_graph(mpopt_ct_tracker* t) { return to_graph(&t->tracker.get_graph()); }
 

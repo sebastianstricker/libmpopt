@@ -24,7 +24,6 @@ def construct_solver(model):
             for l_v in range(len(model.unaries[v])):
                 lib.pairwise_set_cost(f, l_u, l_v, data[l_u, l_v])
 
-    lib.solver_finalize(s.solver)
     return s
 
 

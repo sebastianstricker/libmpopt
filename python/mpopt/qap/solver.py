@@ -221,7 +221,6 @@ def construct_solver(deco):
             for l_v in range(len(deco.unary_set[idx2]) + 1):
                 lib.pairwise_set_cost(f, l_u, l_v, cost[l_u, l_v])
 
-    lib.solver_finalize(s.solver)
     return s
 
 

@@ -81,8 +81,6 @@ def construct_tracker(model):
         lib.detection_set_incoming_cost(detection_map[timestep + 1, index_to_2], slot_right_2, cost / 3.0)
         lib.graph_add_division(g, timestep, index_from, slot_left, index_to_1, slot_right_1, index_to_2, slot_right_2)
 
-    lib.tracker_finalize(t.tracker)
-
     return t
 
 

@@ -25,9 +25,6 @@ class Solver(BaseSolver):
         array = ctypes.cast(np.ctypeslib.as_ctypes(indices), ctypes.c_void_p)
         self.lib.solver_add_clique(self.solver, array.value, indices.size)
 
-    def finalize(self):
-        self.lib.solver_finalize(self.solver)
-
     def run(self, batch_size=DEFAULT_BATCH_SIZE, max_batches=DEFAULT_MAX_BATCHES, greedy_generations=DEFAULT_GREEDY_GENERATIONS):
         return self.lib.solver_run(self.solver, batch_size, max_batches, greedy_generations)
 
@@ -90,5 +87,4 @@ def construct_solver(model, library):
 
     s.constant(model.constant)
 
-    s.finalize()
     return s

@@ -13,7 +13,6 @@ extern "C" {
 
 mpopt_mwis_solver* mpopt_mwis_solver_create() { return new mpopt_mwis_solver; }
 void mpopt_mwis_solver_destroy(mpopt_mwis_solver* s) { delete s; }
-void mpopt_mwis_solver_finalize(mpopt_mwis_solver* s) { s->solver.finalize(); }
 
 int mpopt_mwis_solver_add_node(mpopt_mwis_solver* s, double cost) { return s->solver.add_node(cost); }
 int mpopt_mwis_solver_add_clique(mpopt_mwis_solver* s, int* indices, int size)

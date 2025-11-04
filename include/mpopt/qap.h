@@ -15,7 +15,6 @@ typedef struct mpopt_qap_pairwise_node_t mpopt_qap_pairwise_node;
 
 mpopt_qap_solver* mpopt_qap_solver_create();
 void mpopt_qap_solver_destroy(mpopt_qap_solver* s);
-void mpopt_qap_solver_finalize(mpopt_qap_solver* s);
 mpopt_qap_graph* mpopt_qap_solver_get_graph(mpopt_qap_solver* s);
 mpopt_qap_unary_node* mpopt_qap_graph_add_unary(mpopt_qap_graph* graph, int idx, int number_of_labels, int number_of_forward, int number_of_backward);
 mpopt_qap_uniqueness_node* mpopt_qap_graph_add_uniqueness(mpopt_qap_graph* graph, int idx, int number_of_unaries, int label_idx);
