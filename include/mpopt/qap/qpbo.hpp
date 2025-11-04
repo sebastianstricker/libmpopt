@@ -54,7 +54,7 @@ public:
     mapping_.clear();
   }
 
-  void set_constant(const cost constant)
+  void set_constant([[maybe_unused]] const cost constant)
   {
     // TODO: Implement this.
   }
@@ -83,7 +83,7 @@ public:
     index first_label = -1, second_label = -1;
 
     // FIXME: This clean up this mess.
-    node->traverse_unaries([&](const auto edge, const index slot) {
+    node->traverse_unaries([&](const auto edge, [[maybe_unused]] const index slot) {
       auto& tmp = unaries_[edge.node->idx];
       if (tmp) {
         if (tmp->label0 == edge.slot || tmp->label1 == edge.slot) {
@@ -229,13 +229,13 @@ public:
 protected:
   qpbo_type qpbo_;
   const graph_type* graph_;
+  bool enable_weak_persistency_;
+  bool enable_probe_;
+  bool enable_improve_;
   std::vector<std::optional<qpbo_unary_type>> unaries_;
   std::vector<bool> uniqueness_;
   std::vector<bool> pairwise_;
   std::vector<int> mapping_;
-  bool enable_weak_persistency_;
-  bool enable_probe_;
-  bool enable_improve_;
 };
 
 #endif
