@@ -133,18 +133,20 @@ bool check_stopping_criterion(){
     primals_best_.resize();
     primals_candidate_.resize();
     ub_best_ = ub_candidate_ = infinity;
-
-    // auto dump_assignment = [this]() {
-    //   bool first=true;
-    //   std::cout << "[";
-    //   for (const auto a : primals_best_.assignment()) {
-    //     if (!first)
-    //       std::cout << " ";
-    //     std::cout << a;
-    //     first = false;
-    //   }
-    //   std::cout << "]";
-    // };
+      
+    std::cout << "p Value for stopping criterion:" << stopping_criterion.p << std::endl;
+    // function: print current assignment
+    auto dump_assignment = [this]() {
+      bool first=true;
+      std::cout << "[";
+      for (const auto a : primals_best_.assignment()) {
+        if (!first)
+          std::cout << " ";
+        std::cout << a;
+        first = false;
+      }
+      std::cout << "]";
+    };
 
     signal_handler h;
     std::cout.precision(std::numeric_limits<cost>::max_digits10);
@@ -154,7 +156,6 @@ bool check_stopping_criterion(){
         pairwise_messages::send_messages_to_unaries(node);
       }
     }
-    //std::cout << "p Value for stopping criterion:" << stopping_criterion.p << std::endl;
     for (int i = 0; i < max_batches && !h.signaled(); ++i) {
       const auto clock_start = clock_type::now();
 
@@ -163,20 +164,20 @@ bool check_stopping_criterion(){
 
       single_pass<true>(greedy_generations);
 
-      // const auto lb = this->lower_bound();
+      const auto lb = this->lower_bound();
       this->iterations_ += batch_size;
 
       const auto clock_end = clock_type::now();
       this->duration_ += clock_end - clock_start;
 
-      // std::cout << "it=" << this->iterations_ << " "
-      //           << "lb=" << lb << " "
-      //           << "ub=" << ub_best_ << " "
-      //           << "gap=" << static_cast<float>(100.0 * (ub_best_ - lb) / std::abs(lb)) << "% "
-      //           << "t=" << this->runtime() << " "
-      //           << "a=";
-      // dump_assignment();
-      // std::cout << "\n";
+      std::cout << "it=" << this->iterations_ << " "
+                << "lb=" << lb << " "
+                << "ub=" << ub_best_ << " "
+                << "gap=" << static_cast<float>(100.0 * (ub_best_ - lb) / std::abs(lb)) << "% "
+                << "t=" << this->runtime() << " "
+                << "a=";
+      dump_assignment();
+      std::cout << "\n";
 
       ub_list.push_back(ub_best_);
       if (check_stopping_criterion()){
@@ -189,21 +190,21 @@ bool check_stopping_criterion(){
     // iterations at all. In those cases we run the greedy heurisitic the
     // specified number of times and fuse the solutions together.
     if (max_batches == 0) {
-      // const auto lb = this->lower_bound();
+      const auto lb = this->lower_bound();
       for (int i = 0; i < greedy_generations; ++i) {
         const auto clock_start = clock_type::now();
         primal_step();
         const auto clock_end = clock_type::now();
         this->duration_ += clock_end - clock_start;
 
-        // std::cout << "greedy=" << (i+1) << " "
-        //           << "lb=" << lb << " "
-        //           << "ub=" << ub_best_ << " "
-        //           << "gap=" << static_cast<float>(100.0 * (ub_best_ - lb) / std::abs(lb)) << "% "
-        //           << "t=" << this->runtime() << " "
-        //           << "a=";
-        // dump_assignment();
-        // std::cout << "\n";
+        std::cout << "greedy=" << (i+1) << " "
+                  << "lb=" << lb << " "
+                  << "ub=" << ub_best_ << " "
+                  << "gap=" << static_cast<float>(100.0 * (ub_best_ - lb) / std::abs(lb)) << "% "
+                  << "t=" << this->runtime() << " "
+                  << "a=";
+        dump_assignment();
+        std::cout << "\n";
       }
     }
 
